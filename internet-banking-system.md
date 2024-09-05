@@ -1,8 +1,3 @@
-
-```drawio
-${representations/drawio/diagram}
-```
-
 The the above diagram is a [Container diagram](https://c4model.com/#ContainerDiagram), which is "zoom-in to the system boundary".
 
 ## Mapping
