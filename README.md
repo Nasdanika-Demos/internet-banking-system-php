@@ -1,458 +1,93 @@
-# Drawio Site
-
-This is a template repository for web sites generated from [Drawio](https://www.drawio.com/) diagrams with [GitHub Actions](https://docs.github.com/en/actions) and [Nasdanika CLI Drawio Command](https://docs.nasdanika.org/nsd-cli/nsd/drawio/index.html).
-
-
-## Demos
-
-Below is a list of sites created from this template:
-
-* [Bob the builder](https://nasdanika-demos.github.io/bob-the-builder/), this [video](https://www.youtube.com/watch?v=OtifPFetg9o) shows how this demo was created.
-* [Declarative Command Pipelines](https://nasdanika-demos.github.io/declarative-command-pipelines/)
-
-## Steps
-
-* On the [repository page](https://github.com/Nasdanika-Templates/drawio-site) click "Use this template" button in the top right.
-* Once you create a new repository, go to the Settings > Pages and select "GitHub Actions" as source.
-* Click on the Acitons tab. You should see a failed deployment. Manually trigger ``Generate HTML Site from a Drawio diagram with Nasdanika CLI`` action. Once it is successful, open the pages site.
-* Customize the diagram, root action, and page template to your needs as explained below.
-
-The deployment action can be triggered manually from the actions page. 
-It can be useful if your site references external resources.
-
-For example:
-
-* The diagram file may link to pages in external diagrams (federated diagrams)
-* The diagram file may reference external documentation resources
-
-## Deployment process
-
-* [Nasdanika CLI](https://docs.nasdanika.org/nsd-cli/index.html) is downloaded and extracted
-* [drawio](https://docs.nasdanika.org/nsd-cli/nsd/drawio/index.html) <diagram file> [html-app](https://docs.nasdanika.org/nsd-cli/nsd/drawio/html-app/index.html) ... [site](https://docs.nasdanika.org/nsd-cli/nsd/drawio/html-app/site/index.html) ... command pipeline is executed to generate a Web site
-* The generated site is deployed to [GitHub Pages](https://pages.github.com/). 
-
-## Diagram file
-
-You may rename ``diagram.drawio`` to something more meaningful, e.g.``my-system.drawio``. 
-Or you may use a pre-existing drawio diagram and delete ``diagram.drawio``. 
-You can also use an external diagram and reference it by URL.
-If you do rename/replace the diagram, open ``.github/workflows/site.yml`` and update line 40 with a new diagram file name.
-
-## Page template
-
-In the page template file you can:
-
-* Modify the [theme](https://javadoc.io/doc/org.nasdanika.html/bootstrap/latest/org.nasdanika.html.bootstrap/org/nasdanika/html/bootstrap/Theme.html) on line 3 - choose one of 20+ [Bootswatch themes](https://bootswatch.com/4/) or the default theme. Please note that generated sites look good with light themes, and not so good (in my personal opinion) with dark themes.
-* Highly recommended: remove out-of-the-box Google analytics script at lines 23-33 - replace it with your own or remove the header section (lines 22-33) altogether. 
-* Remove line 36 or set ``fluid`` to ``false``.
-* Modify [navigation panel style](https://html-app.models.nasdanika.org/references/eClassifiers/NavigationPanelStyle/index.html) at line 38
-
-## Root action
-
-The root action defines:
-
-* The header (root action[^action_types]). You may modify the icon and the title. 
-* Root navigation actions - lines 6 - 20. Glossary and search are functional, but not perfect - they need TLC, which I don't have capacity for at the moment. You may use them AS-IS, remove/replace, or improve and create a pull request. Their advantage is that they are standalone - no external dependencies. For public web sites you may consider something like [Algolia](https://www.algolia.com) - they have a [free tier](https://www.algolia.com/pricing/) and a [Vue.js](https://vuejs.org/) search component, [InstantSearch](https://www.algolia.com/doc/guides/building-search-ui/what-is-instantsearch/vue/)
-* Footer (root navigation) at lines 21+. Out of the box is links to the template repository site - update or remove.
-
-[^action_types]: See [Action types](https://html-app.models.nasdanika.org/index.html#action-types)
-
-## Diagram elements
-
-You can add documentation to diagram elements, ``title`` and ``icon`` property, customize element ID, and link elements to pages or other elements, including pages and elements in other diagram files.
-
-Site pages are generated only for elements with documentation.
-
-Important: Pages are not generated for diagram elements without labels or ``title`` property! It may lead to broken links.
-
-### Documentation
-
-You can add inline documentation in ``documentation`` property as it is done for [Alice](https://nasdanika-templates.github.io/drawio-site/alice/index.html).
-
-Documentation is by default treated as Markdown. 
-Use ``doc-format`` property to specify documentation format.
-Out of the box there are 3 formats supported:
-
-* ``markdown``
-* ``html``
-* ``text``
-
-You can add support for more formats, e.g. [Asciidoc](https://docs.asciidoctor.org/asciidoc/latest/) using [AsciidoctorJ](https://github.com/asciidoctor/asciidoctorj) - see "Adding support for documentation format" below. 
-
-You may reference an external documentation resources with ``doc-ref`` property - this how it is done for the diagram root (click on the diagram canvas and then on "Edit Data" button in the right panel). 
-Documentation reference is a URL resolved relative to the diagram file location.
-
-If you use ``doc-ref`` property, the documentation format is inferred from the extension. 
-You may override the inferred value using ``doc-format`` property.
-
-### Title
-
-By default the element label is used as action text. 
-For elements with long labels it may be desirable to use shorter text. 
-To do so use ``title`` property.
-
-### Icon
-
-By default element icons are derived from element images where possible. 
-Otherwise a default icon is used.
-You may use ``icon`` property to customize element icon. 
-The icon can be a URL (including data URL) or a CSS style e.g. ``fas fa-user``.
-
-### ID 
-
-Element ID's are used to construct element page URL's. 
-Element ID's are generated as long random strings. 
-They are editable - double-click on the ID at the top of the data dialog.
-So, if you'd like to have semantic URL's - customize the ID's.  
-
-## Page and element links
-
-You may link elements to pages and other element using the [extended link syntax](https://docs.nasdanika.org/core/drawio/index.html#page-and-element-links).
-
-When an element links to a page, the page root[^api] is logically merged with the linking element and page elements (except elements liking to other elements) become logical children of the linking element.
-
-If an element links to another element, then that element is not considered a logical child of the page/root/page linking element. 
-The link chain is traversed and the diagram element on the generated site is linked to the page of the link target element if that element has a page (i.e. it is documented). Otherwise there is no link.
-
-[^api]: See [Drawio API](https://docs.nasdanika.org/core/drawio/index.html#api)
-
-## Multiple top-level pages
-
-A top-level diagram page is a page that is not linked from any diagram element. 
-If there is more than one top-level page, then you may want to add a principal action to the ``root-action.yml`` and link pages to the principal action by removing ``--add-to-root`` option from the command line.
-
-See TODO for an example.
-
-## Markdown 
-
-This section demonstrates advanced capabilities of Markdown documentation. 
-
-### Embedded images
-
-You can embed PNG and JPEG using fenced blocks.
-
-#### PNG resource
-
-	```png-resource
-	isa.png
-	```
-
-Resource location is resolved relative to the diagram file location.
-
-#### JPEG resource
-
-	```jpeg-resource
-	my.jpeg
-	```
-
-#### PNG
-
-	```png
-	Base 64 encoded png 
-	```
-#### JPEG
-
-	```jpeg
-	Base 64 encoded jpeg
-	```
-
-### Embedded diagrams
-
-You can also embed [PlantUML](https://plantuml.com/), Drawio, and [Mermaid](https://mermaid-js.github.io/mermaid/#/) diagrams using fenced blocks. 
-
-#### Drawio
-
-    ```drawio-resource
-    aws.drawio
-    ```
-
-Resource location is resolved in the same way as for image files as explained above.
-
-#### PlantUML
-
-PlantUML diagrams can be defined inline or loaded from resources.
-
-##### Loading from a resource
-
-    ```uml-resource
-    sequence.plantuml
-    ```
-
-##### Inline 
-
-The following language specifications (dialects) are supported:
-
-* ``uml`` - for the following diagram types:
-    * [Sequence](https://plantuml.com/sequence-diagram), 
-    * [Use Case](https://plantuml.com/use-case-diagram), 
-    * [Class](https://plantuml.com/class-diagram), 
-    * [Activity](https://plantuml.com/activity-diagram-beta), 
-    * [Component](https://plantuml.com/component-diagram), 
-    * [State](https://plantuml.com/state-diagram), 
-    * [Object](https://plantuml.com/object-diagram), 
-    * [Deployment](https://plantuml.com/deployment-diagram), 
-    * [Timing](https://plantuml.com/timing-diagram), 
-    * [Network](https://plantuml.com/nwdiag).
-* ``wireframe`` - for [Wireframe diagrams](https://plantuml.com/salt)
-* ``gantt`` - for [Gantt diagrams](https://plantuml.com/gantt-diagram)
-* ``mindmap`` - for [Mind Maps](https://plantuml.com/mindmap-diagram)
-* ``wbs`` - for [Work Breakdown Structures](https://plantuml.com/wbs-diagram)
-
-###### UML
-
-**Sequence**
-
-Fenced block:
-
-	```uml
-	Alice -> Bob: Authentication Request
-	Bob --> Alice: Authentication Response
-	```
-	
-Diagram:
-
-```uml
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
+This site was generated as explained below:
+
+* A [Drawio](https://www.drawio.com/) diagram of an Internet Banking System was created based on images and descriptions from [The C4 model for visualising software architecture](https://c4model.com/). Descriptions of elements and diagrams were copied verbatim under the terms of [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). The diagram uses free icons from [Icons8](https://icons8.com/) to provide visual distinction between architecture elements. 
+* The diagram was mapped to the [Architecture model](https://architecture.models.nasdanika.org/) using properties of the diagram elements as explained in the [Beyond Diagrams](https://leanpub.com/beyond-diagrams) book.
+* Then the architecture model was transformed to the [HTML Application model](https://html-app.models.nasdanika.org/index.html) and a static web site was generated from that model. For the majority of elements icons were generated from the diagram images of the respective elements.
+* The web site is deployed by [GitHub Pages](https://pages.github.com/).
+
+Notes:
+
+* Diagram elements have tooltips with descriptions from the C4 model site.
+* A click on a diagram element navigates to the element page.
+* The left navigation provides a filter to quickly find a model element by name.
+* [Search](search.html) provides full-text search which also searches for text in diagrams. 
+* [Glossary](glossary.html) provides a list of "terms" - a dictionary of the language of the system. It needs improvements - currently it shows all actions. Uncheck "Hide UUID" to see the elements. Elements can be filtered using the filter text field.
+* There is a link to the [source code on GitHub](https://github.com/Nasdanika-Models/architecture/tree/main/demos/internet-banking-system) in the footer.
+* Connections (relationships) are not mapped in this demo.
+
+```drawio
+${representations/drawio/diagram}
 ```
 
-**Component**
+The the above diagram is a [System Context diagram](https://c4model.com/#SystemContextDiagram), which is
 
-Component diagram with links to component pages.
+> a good starting point for diagramming and 
+> documenting a software system, allowing you to step back 
+> and see the big picture. Draw a diagram showing your system as a box
+>  in the centre, surrounded by its users and the other systems that it
+> interacts with.
 
+## Mapping
 
-Fenced block:
+[TOC levels=3-6]
 
-	```uml
-    package Core {
-       component Common [[https://github.com/Nasdanika/core/tree/master/common]]
-    }
-    
-    package HTML {
-       component HTML as html [[https://github.com/Nasdanika/html/tree/master/html]]
-       [html] ..> [Common]
-    }
-	```
-	
-Diagram:
+### Root -> ArchitectureDescription
 
-```uml
-package Core {
-   component Common [[https://github.com/Nasdanika/core/tree/master/common]]
-}
+The [root](https://drawio.models.nasdanika.org/references/eClassifiers/Root/index.html) of the diagram is mapped to [Architecture Description](https://architecture.models.nasdanika.org/references/eClassifiers/ArchitectureDescription/index.html)
+with the ``type`` property set to ``ArchitectureDescription``
 
-package HTML {
-   component HTML as html [[https://github.com/Nasdanika/html/tree/master/html]]
-   [html] ..> [Common]
-}
+```png-resource
+../../root-properties.png
 ```
 
-**Wireframe**
+This documentation was generated from [internet-banking-system-architecture.md](https://github.com/Nasdanika-Models/architecture/blob/main/demos/internet-banking-system/internet-banking-system-architecture.md) markdown file with the image above embedded using ``png-resource`` fenced block
+and the diagram embedded using ``drawio`` fenced block with ``representations/drawio/diagram`` expansion token.
 
-Fenced block:
+Diagram semantic elements were mapped to the root semantic element (``ArchitectureDescription``) using the following ``feature-map``:
 
-	```wireframe
-	{
-	  Just plain text
-	  [This is my button]
-	  ()  Unchecked radio
-	  (X) Checked radio
-	  []  Unchecked box
-	  [X] Checked box
-	  "Enter text here   "
-	  ^This is a droplist^
-	}
-	```
-
-
-Diagram:
-
-```wireframe
-{
-  Just plain text
-  [This is my button]
-  ()  Unchecked radio
-  (X) Checked radio
-  []  Unchecked box
-  [X] Checked box
-  "Enter text here   "
-  ^This is a droplist^
-}
+```yaml
+container:
+  self: 
+    elements:
+      path: 2
+      comparator: label
 ```
 
-**Gantt**
+The above mapping means that use the semantic element of this diagram element (root) and add semantic elements of its descendants at path length ``2`` to the ``elements`` reference ordering by ``label``.
+Path length is set to 2 because the diagram elements are contained by the background [layer](https://drawio.models.nasdanika.org/references/eClassifiers/Layer/index.html), which is in turn contained by the root.
 
-Fenced block:
+``page-element`` set to ``true`` specifies that the root semantic element shall also be the [page](https://drawio.models.nasdanika.org/references/eClassifiers/Page/index.html)'s semantic elements. 
+Because this is the top-level page (not linked from diagram elements), it also becomes the [document](https://drawio.models.nasdanika.org/references/eClassifiers/Document/index.html)'s semantic element and as such the contents element of the diagram's Ecore resource.
 
-	```gantt
-	[Prototype design] lasts 15 days and links to [[https://docs.nasdanika.org/index.html]]
-	[Test prototype] lasts 10 days
-	-- All example --
-	[Task 1 (1 day)] lasts 1 day
-	[T2 (5 days)] lasts 5 days
-	[T3 (1 week)] lasts 1 week
-	[T4 (1 week and 4 days)] lasts 1 week and 4 days
-	[T5 (2 weeks)] lasts 2 weeks
-	```
+``spec`` sets archtiecture description ``name`` to "Internet Banking System Architecture" - this is what is displayed in the grey navigation bar above:
 
-Diagram:
-
-```gantt
-[Prototype design] lasts 15 days and links to [[https://docs.nasdanika.org/index.html]]
-[Test prototype] lasts 10 days
--- All example --
-[Task 1 (1 day)] lasts 1 day
-[T2 (5 days)] lasts 5 days
-[T3 (1 week)] lasts 1 week
-[T4 (1 week and 4 days)] lasts 1 week and 4 days
-[T5 (2 weeks)] lasts 2 weeks
+```yaml
+name: Internet Banking System Architecture
 ```
 
-**Mind Map**
+### Surroundings -> Node
 
-Fenced block:
+"Personal Banking Customer", "E-mail System", and "Mainframe Banking System" diagram elements are mapped to [Node](https://architecture.models.nasdanika.org/references/eClassifiers/Node/index.html).
+They have ``semantic-id`` property to demonstrate its usage. 
+Another way to provide meaningful ID's and URL's is to edit element ID's - this approach is used on lower-level diagrams.
 
-	```mindmap
-	* Debian
-	** [[https://ubuntu.com/ Ubuntu]]
-	*** Linux Mint
-	*** Kubuntu
-	*** Lubuntu
-	*** KDE Neon
-	** LMDE
-	** SolydXK
-	** SteamOS
-	** Raspbian with a very long name
-	*** <s>Raspmbc</s> => OSMC
-	*** <s>Raspyfi</s> => Volumio
-	```
+The "Personal Banking Customer" element does not have an image associated with it and therefore uses an explicit icon ``spec``:
 
-Diagram:
-
-```mindmap
-* Debian
-** [[https://ubuntu.com/ Ubuntu]]
-*** Linux Mint
-*** Kubuntu
-*** Lubuntu
-*** KDE Neon
-** LMDE
-** SolydXK
-** SteamOS
-** Raspbian with a very long name
-*** <s>Raspmbc</s> => OSMC
-*** <s>Raspyfi</s> => Volumio
+```yaml
+icon: https://img.icons8.com/officel/16/user.png
 ```
 
-**WBS**
+Tooltips are copied from descriptions on the C4 Model diagram.
 
-WBS elements can have links. This type of diagram can also be used to display organization structure.
+### Internet Banking System -> CompositeNode
 
-	```wbs
-	* [[https://docs.nasdanika.org/index.html Business Process Modelling WBS]]
-	** Launch the project
-	*** Complete Stakeholder Research
-	*** Initial Implementation Plan
-	** Design phase
-	*** Model of AsIs Processes Completed
-	**** Model of AsIs Processes Completed1
-	**** Model of AsIs Processes Completed2
-	*** Measure AsIs performance metrics
-	*** Identify Quick Wins
-	** Complete innovate phase
-	```
+The "Internet Banking System" diagram element is mapped to [CompositeNode](https://architecture.models.nasdanika.org/references/eClassifiers/CompositeNode/index.html) because it has sub-elements.
+It is linked to the "Container Diagram" page. As such, its semantic element is mapped to the "Container Diagram" page element as well allowing further mapping on [that page](references/elements/internet-banking-system/index.html).
 
-Fenced block:
+## Generation
 
+This site was generated with a [JUnit test](https://github.com/Nasdanika-Models/architecture/blob/main/demos/internet-banking-system/src/test/java/org/nasdanika/models/architecture/demos/ibs/tests/TestInternetBankingSystemSiteGen.java#L33).
 
-Diagram:
+Another way to generate documentation site is to use [Nasdanika CLI](https://docs.nasdanika.org/nsd-cli/index.html) [app/model/site](https://docs.nasdanika.org/nsd-cli/nsd/app/model/site/index.html) command
+or [app/model/action](https://docs.nasdanika.org/nsd-cli/nsd/app/model/action/index.html) command and then [app/site](https://docs.nasdanika.org/nsd-cli/nsd/app/site/index.html) command.
 
-```wbs
-* [[https://docs.nasdanika.org/index.html Business Process Modelling WBS]]
-** Launch the project
-*** Complete Stakeholder Research
-*** Initial Implementation Plan
-** Design phase
-*** Model of AsIs Processes Completed
-**** Model of AsIs Processes Completed1
-**** Model of AsIs Processes Completed2
-*** Measure AsIs performance metrics
-*** Identify Quick Wins
-** Complete innovate phase
-```
-
-#### Mermaid
-
-You can define [Mermaid](https://mermaid-js.github.io/mermaid/#/) diagrams in ``mermaid`` fenced blocks:
-
-  ```mermaid
-  flowchart LR
-     Alice --> Bob & Chuck --> Deb
-  ```
-
-results in this diagram:
-
-```mermaid
-flowchart LR
-   Alice --> Bob & Chuck --> Deb
-```
-
-##### Loading from a resource
-
-It is also possible to load a diagram definition from a resource resolved relative to the model resource:
-
-    ```mermaid-resource
-    sequence.mermaid
-    ```
-
-### Extensions
-
-* [Table of contents](https://github.com/vsch/flexmark-java/wiki/Table-of-Contents-Extension) - add ``[TOC]`` to the document as explained in the documentation. This extension will create a table of contents from markdown headers. 
-* [Footnotes](https://github.com/vsch/flexmark-java/wiki/Footnotes-Extension)
-* Strikethrough: ``~~strikethrough~~``-> ~~strikethrough~~ 
-* Subscript: ``H~2~O`` -> H~2~0
-* Superscript: ``2^5^ = 32`` -> 2^5^ = 32
-
-## Failing on errors
-
-``-r=-1`` command line option means "don't fail on page errors" such as:
-
-* Blank pages
-* Broken internal links
-* Missing resources
-
-Missing resources are reported on pages using danger alert blocks.
-
-If you want to prevent deployment of a site with page errors, remove the option or set it to the expected number of errors - there might be "known errors" which you are OK to live with.
-
-## Upgrading NSD CLI version
-
-When a new version of Nasdanika CLI is released you may update lines 33 and 35 in ``site.yml`` to point to the new distribution.
-
-## Adding support for a new documentation format
-
-To add a new documentation format:
-
-* Create a Maven module
-* Create a documentation [capability](https://docs.nasdanika.org/core/capability/index.html) factory class, see [MarkdownDocumentationFactory](https://github.com/Nasdanika/core/blob/master/exec/src/main/java/org/nasdanika/exec/util/MarkdownDocumentationFactory.java)
-* Register it in ``module-info.java`` - [example](https://github.com/Nasdanika/core/blob/master/exec/src/main/java/module-info.java)
-* Build a custom CLI with the above module as a dependency. See [Demo CLI](https://github.com/Nasdanika-Demos/cli) for an example.
-* Build a distribution, deploy to a web location, and update ``site.yml`` lines 33 and 35.
-
-## Next steps
-
-This section outlines possible next steps once you have a site generated from a diagram or a set of diagrams.
-
-### Executable diagrams
-
-You may make the diagrams executable. Details and demos are coming soon.
-
-#### Scripted processors
-
-#### Dynamic proxy
-
-#### HTTP Routes
-
-### Semantic mapping
-
-You can also "upgrade" to semantic mapping as explained in the [Beyond Diagrams](https://leanpub.com/beyond-diagrams) book and TODO story. 
