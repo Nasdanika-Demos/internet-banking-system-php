@@ -7,8 +7,7 @@ hide footbox
 boundary MainframeBankingSystemFacadeImpl
 
 MainframeBankingSystemFacadeImpl -> BankingSystemConnection: Uses
-BankingSystemConnection -> Alice: Authentication Response
-BankingSystemConnection -> Mainframe Banking System [[../../../../mainframe-banking-system/index.html]]: Sends
-BankingSystemConnection <-- Mainframe Banking System: Receives
+BankingSystemConnection -> "Mainframe Banking System" [[../../../../mainframe-banking-system/index.html]]: Sends
+BankingSystemConnection <-- "Mainframe Banking System": Receives
 ```
 
