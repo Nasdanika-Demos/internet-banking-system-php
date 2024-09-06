@@ -4,10 +4,14 @@ This is an example of a code component documentation with a [PlantUML sequence d
 ```uml
 hide footbox
 
-boundary MainframeBankingSystemFacadeImpl
+hide footbox
+
+boundary MainframeBankingSystemFacadeImpl 
+control BankingSystemConnection
+participant "Mainframe Banking System" as MBS [[../../../../mainframe-banking-system/index.html]]
 
 MainframeBankingSystemFacadeImpl -> BankingSystemConnection: Uses
-BankingSystemConnection -> "Mainframe Banking System" [[../../../../mainframe-banking-system/index.html]]: Sends
-BankingSystemConnection <-- "Mainframe Banking System": Receives
+BankingSystemConnection -> MBS : Sends
+BankingSystemConnection <-- MBS : Receives
 ```
 

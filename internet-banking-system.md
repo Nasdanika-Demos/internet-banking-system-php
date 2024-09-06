@@ -10,4 +10,5 @@ The "Internet Banking System" container is linked to the "Internet Banking Syste
 This results in the "API Application" page being an immediate child of the "Internet Banking System" page.
 Without it there would be an intermediate "Internet Banking System" label representing the container.
 
+Another option to avoid an intermediate label where it is not desired is to use a regular node, not a container (container property is not checked).
 
