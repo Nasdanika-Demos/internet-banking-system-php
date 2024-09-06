@@ -1,54 +1,13 @@
 The the above diagram is a [Container diagram](https://c4model.com/#ContainerDiagram), which is "zoom-in to the system boundary".
 
-## Mapping
+On this diagram only [API Application](api-application/index.html) is documented
+and therefore has a page to which its diagram element links.
 
-### Surroundings -> selectors
+In the source diagram the "Mainframe Banking System" diagram element is linked to the "Mainframe Banking System" element on the [System Context Diagram](https://nasdanika-demos.github.io/internet-banking-system/index.html) using this element link: ``data:element/id,name,System+Context+Diagram/mainframe-banking-system``. 
+As such, both elements link to the [Mainframe Banking System](../mainframe-banking-system/index.html) page in the generated site.
 
-"Personal Banking Customer", "E-mail System", and "Mainframe Banking System" diagram elements are mapped to the same semantic elements as on the System Context Diagram using ``selector``s. 
-The system context diagram defines the surrounding nodes and this diagram references them.
-
-This is a selector of the "E-mail System":
-
-```yaml
-getDocument().getModelElementByProperty('semantic-id', 'microsoft-exchange')
-```
-
-The loading logic "carries over" tooltips from the System Context Diagram to this diagram.
-
-### Internet Banking System
-
-The "Internet Banking System" container maps to the same semantic element as on the System Context diagram because:
-
-* The "Internet Banking System" element on the System Context Diagram links to this diagram page.
-* The "Internet Banking System" element on this diagram has ``page-element`` property set to ``true``.   
-
-Semantic elements of the child elements of the "Internet Banking System" element are mapped to the ``elements`` reference and ordered with the ``flow`` comparator:
-
-```yaml
-container:
-  self: 
-    elements:
-      path: 1
-      comparator: 
-        flow: 
-          fallback: label
-          condition: id != 'send-email'
-```          
-
-The condition prevents traversal of the "API Application" -> "E-mail System" connection. 
-It is not really necessary here - the order would not change without it.
-It is provided as an example because connection conditions may be necessary in some cases for proper ordering in diagrams with connection cycles.
-
-### Containers
-
-All containers within the system except the "API Application" are mapped to [Node](https://architecture.models.nasdanika.org/references/eClassifiers/Node/index.html)s, similar to the surroundings on the System Context diagram.
+The "Internet Banking System" container is linked to the "Internet Banking System" node on the [System Context Diagram](../index.html) using this link: ``data:element/id,id,Ht1M8jgEwFfnCIfOTk4-/internet-banking-system``. 
+This results in the "API Application" page being an immediate child of the "Internet Banking System" page.
+Without it there would be an intermediate "Internet Banking System" label representing the container.
 
 
-#### API Application 
-
-The "API Application" diagram element is mapped to [CompositeNode](https://architecture.models.nasdanika.org/references/eClassifiers/CompositeNode/index.html) because it has sub-elements.
-It is linked to the "Container Diagram" page. As such, its semantic element is mapped to the "API Application Component Diagram" page element as well allowing further mapping on [that page](references/elements/api-application/index.html).
-
-This diagram element defines ``base-uri`` property as ``%id%/``.
-Because "Placeholders" is checked, ``%id%/`` expands to ``api-application/`` during loading. 
-``doc-ref`` is set to ``readme.md``, which in combination with ``base-uri`` resolves to [``api-appliction/readme.md``](https://github.com/Nasdanika-Models/architecture/blob/main/demos/internet-banking-system/api-application/readme.md).

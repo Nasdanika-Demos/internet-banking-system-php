@@ -1,48 +1,13 @@
 The the above diagram is a [Component diagram](https://c4model.com/#ComponentDiagram), which is used to "decompose each container further to identify the major structural building blocks and their interactions".
 
-## Mapping
+On this diagram only [Mainframe Banking System Facade](mainframe-banking-system-facade/index.html) is documented
+and therefore has a page to which its diagram element links.
 
-### Surroundings -> selectors
+In the source diagram the "Mainframe Banking System" diagram element is linked to the "Mainframe Banking System" element on the [System Context Diagram](https://nasdanika-demos.github.io/internet-banking-system/index.html) using this element link: ``data:element/id,id,Ht1M8jgEwFfnCIfOTk4-/mainframe-banking-system``. 
+As such, both elements link to the [Mainframe Banking System](../../mainframe-banking-system/index.html) page in the generated site.
 
-Similar to the container diagram, diagram elements representing the surroundings of the "API Application" are mapped to semantic elements defined on the higher level diagrams using ``selector``s. 
-The system context diagram defines the surrounding nodes and this diagram references them.
-
-This is a selector of the "Single-Page Application":
-
-```yaml
-getDocument().getModelElementById('single-page-application')
-```
-
-The loading logic "carries over" tooltips from the System Context Diagram to this diagram.
-
-### API Application
-
-The "API Application" container maps to the same semantic element as on the Container diagram because:
-
-* The "API Application" element on the Container diagram links to this diagram page.
-* The "API Application" element on this diagram has ``page-element`` property set to ``true``.   
-
-Semantic elements of the child elements of the "API Application" element are mapped to the ``elements`` reference and ordered with the ``right-down`` comparator:
-
-```yaml
-container:
-  self:
-    elements:
-      path: 1
-      comparator: right-down
-```          
-
-### Components
-
-All components within the container except the "Mainframe Banking System Facade" are mapped to [Node](https://architecture.models.nasdanika.org/references/eClassifiers/Node/index.html)s.
-
-The "Mainframe Banking System Facade" component is mapped to [CompositeNode](https://architecture.models.nasdanika.org/references/eClassifiers/CompositeNode/index.html) because it has sub-elements.
-It is linked to the "Mainframe Banking System Facade Code" page. As such, its semantic element is mapped to the "Mainframe Banking System Facade Code" page element as well allowing further mapping on [that page](references/elements/mainframe-banking-system-facade/index.html).
-
-This diagram element defines ``base-uri`` property as ``%id%/``.
-Because "Placeholders" is checked, ``%id%/`` expands to ``mainframe-banking-system-facade/`` during loading. 
-``doc-ref`` is set to ``readme.md``, which in combination with ``base-uri`` of this element and its containing element resolves to [``api-appliction/mainframe-banking-system-facade/readme.md``](https://github.com/Nasdanika-Models/architecture/blob/main/demos/internet-banking-system/api-application/mainframe-banking-system-facade/readme.md).
-
-
+The "API Application" container is linked to the "API Application" node on the [Container Diagram](../index.html) using this link: ``data:element/id,id,fufg5MHGldTBZNh1nXvk/api-application``. 
+This results in the "Mainframe Banking System Facade" page being an immediate child of the API application page.
+Without it there would be an intermediate "API Application" label representing the container.
 
 

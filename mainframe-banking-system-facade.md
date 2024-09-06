@@ -1,7 +1,3 @@
-```drawio
-${representations/drawio/diagram}
-```
-
 The the above diagram is a [Code diagram](https://c4model.com/#CodeDiagram), which is used to show how a component is implemented as code.
 Diagram elements were taken from the Drawio UML shapes palette.
 Icons were added by manually adding ``image=https://cdn.jsdelivr.net/gh/Nasdanika-Models/ecore@master/graph/web-resources/icons/EClass.gif;`` to the style.
@@ -55,3 +51,6 @@ At higher level diagrams it may represent, say:
 
 * During construction: development progress - pending, in progress, blocked, behind schedule, ...
 * After deployment: container runtime status - errors, CPU load, memory consumption, ... 
+
+
+TODO - a sample sequence diagram
