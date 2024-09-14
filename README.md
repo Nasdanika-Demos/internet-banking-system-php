@@ -9,7 +9,7 @@ The the above diagram is a [System Context diagram](https://c4model.com/#SystemC
 
 ## How To
 
-This site was from a [Drawio](https://www.drawio.com/) diagram of an Internet Banking System was created based on images and descriptions from [The C4 model for visualising software architecture](https://c4model.com/).
+This site was generated from a [Drawio](https://www.drawio.com/) diagram of an Internet Banking System, which was created based on images and descriptions from [The C4 model for visualising software architecture](https://c4model.com/).
 Descriptions of elements and diagrams were copied verbatim under the terms of [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
 The diagram uses free icons from [Icons8](https://icons8.com/) to provide visual distinction between architecture elements. 
 
