@@ -39,8 +39,10 @@ jobs:
         working-directory: nsd-cli
         run: |
           chmod u+x nsd
-          ./nsd drawio ../internet-banking-system.drawio html-app -r ../root-action.yml --add-to-root site -r=-1 -F ../page-template.yml ../docs
+          ./nsd drawio ../internet-banking-system.drawio html-app -r ../root-action.yml --add-to-root site -r=-1 -F ../page-template.yml ../docs          
           ls ../docs
+      - name: Copy library
+        run: cp ibs-library.xml docs
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
