@@ -1,4 +1,3 @@
-
 The the above diagram is a [System Context diagram](https://c4model.com/#SystemContextDiagram), which is
 
 > a good starting point for diagramming and 
