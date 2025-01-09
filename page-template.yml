@@ -19,6 +19,13 @@ bootstrap.Page:
     - https://cdn.jsdelivr.net/npm/bootstrap-vue@2.21.2/dist/bootstrap-vue.min.js
     - https://cdn.jsdelivr.net/gh/Nasdanika-Models/html-app@master/gen/web-resources/js/components/table.js
     - https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js
+  prolog:  
+    content.Text: |
+      <?php
+        require_once 'path/to/azure-authenticator.php';
+        $authenticator = new AzureAuthenticator();
+        $authenticator->checkAuthentication();
+      ?>
   head:
     # Google analytics
     content.Text: |+2    
