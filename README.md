@@ -1,3 +1,23 @@
+This is a fork of the [Internet Banking System Demo](https://github.com/Nasdanika-Demos/internet-banking-system) showing how to change file extension to ``php`` and add prolog to the page template with PHP code.
+
+* Changes from the original demo: https://github.com/Nasdanika-Demos/internet-banking-system-php/compare/3829f27..6b52b6c
+* Site with .php pages - download artifacts here: https://github.com/Nasdanika-Demos/internet-banking-system-php/actions/runs/12687003639
+
+Summary of changes:
+
+* site.yml
+    * CLI download URL at line 33 - no need to change once [Nasdanika CLI](https://docs.nasdanika.org/nsd-cli/index.html) 2025.1.0 is released
+    * Line 42:
+        * ``-x index.php`` option to generate ``index.php`` instead of ``index.html ``
+        * ``-x php`` option to scan ``.php`` files for including into search instead of ``.html`` files
+* page-template.yml
+    * prolog with PHP header at line 22
+    * search configuration replacement token at line 42
+* root-action.yml - search and glossary extensions changed to ``php`` from ``html``
+
+-----
+
+
 The the above diagram is a [System Context diagram](https://c4model.com/#SystemContextDiagram), which is
 
 > a good starting point for diagramming and 
